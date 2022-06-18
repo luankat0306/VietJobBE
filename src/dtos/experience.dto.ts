@@ -1,12 +1,18 @@
 import { IsString } from 'class-validator';
 
-export class CreateCertificateDto {
+export class CreateExperienceDto {
   @IsString()
   candidateId: string;
+
   @IsString()
   title: string;
+
   @IsString()
-  image?: string;
+  dateStart?: string;
+
+  @IsString()
+  dateEnd?: string;
+
   @IsString()
   description: string;
 }

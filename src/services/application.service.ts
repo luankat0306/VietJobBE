@@ -9,9 +9,34 @@ class ApplicationService {
   public application = applicationModel;
   public userService = new UserService();
 
-  public async findAllApplication(): Promise<Application[]> {
-    const application: Application[] = await this.application.find();
-    return application;
+  public async findAllApplication({
+    limit = 10,
+    page = 1,
+    ...query
+  }: {
+    page?: number;
+    limit?: number;
+    [key: string]: any;
+  }): Promise<{ data: Application[]; page: number; totalPage: number }> {
+    const application: Application[] = await this.application
+      .find(query)
+      .skip(limit * page - limit)
+      .limit(limit)
+      .lean()
+      .populate({
+        path: 'post',
+        populate: {
+          path: 'employer',
+          populate: {
+            path: 'user',
+          },
+        },
+      });
+    return {
+      data: application,
+      page,
+      totalPage: await this.application.find(query).lean().count(),
+    };
   }
 
   public async findApplicationById(applicationId: string): Promise<Application> {
@@ -25,8 +50,14 @@ class ApplicationService {
 
   public async createApplication(applicationData: CreateApplicationDto): Promise<Application> {
     if (isEmpty(applicationData)) throw new HttpException(400, "You're not applicationData");
+    const { candidateId, postId } = applicationData;
 
-    const createApplication = await this.application.create({ ...applicationData });
+    const application = await this.application.findOne({
+      candidate: candidateId,
+      post: postId,
+    });
+    if (application) throw new HttpException(409, 'Bạn đã ứng tuyển với công việc này rồi');
+    const createApplication = await this.application.create({ candidate: candidateId, post: postId });
     return createApplication;
   }
 

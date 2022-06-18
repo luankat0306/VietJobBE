@@ -9,8 +9,12 @@ class SkillCandidateService {
   public skillCandidate = skillCandidateModel;
   public userService = new UserService();
 
-  public async findAllSkillCandidate(): Promise<SkillCandidate[]> {
-    const skillCandidate: SkillCandidate[] = await this.skillCandidate.find();
+  public async findAllSkillCandidate(params): Promise<SkillCandidate[]> {
+    const skillCandidate: SkillCandidate[] = await this.skillCandidate
+      .find({
+        candidate: params?.candidateId,
+      })
+      .populate('skill');
     return skillCandidate;
   }
 
@@ -25,15 +29,25 @@ class SkillCandidateService {
 
   public async createSkillCandidate(skillCandidateData: CreateSkillCandidateDto): Promise<SkillCandidate> {
     if (isEmpty(skillCandidateData)) throw new HttpException(400, "You're not skillCandidateData");
+    const { candidateId, skillId, ...data } = skillCandidateData;
 
-    const createSkillCandidate = await this.skillCandidate.create({ ...skillCandidateData });
+    const createSkillCandidate = await this.skillCandidate.create({
+      candidate: candidateId,
+      skill: skillId,
+      ...data,
+    });
     return createSkillCandidate;
   }
 
   public async updateSkillCandidate(skillCandidateId: string, skillCandidateData: CreateSkillCandidateDto): Promise<SkillCandidate> {
     if (isEmpty(skillCandidateData)) throw new HttpException(400, "You're not skillCandidateData");
 
-    const updateSkillCandidateById = await this.skillCandidate.findByIdAndUpdate(skillCandidateId, { ...skillCandidateData });
+    const { candidateId, skillId, ...data } = skillCandidateData;
+    const updateSkillCandidateById = await this.skillCandidate.findByIdAndUpdate(skillCandidateId, {
+      candidate: candidateId,
+      skill: skillId,
+      ...data,
+    });
     if (!updateSkillCandidateById) throw new HttpException(409, "You're not skillCandidate");
     return updateSkillCandidateById;
   }

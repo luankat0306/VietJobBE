@@ -8,7 +8,8 @@ class ApplicationController {
 
   public getApplication = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const findAllApplicationData: Application[] = await this.applicationService.findAllApplication();
+      const params = req.query;
+      const findAllApplicationData: Application[] = await this.applicationService.findAllApplication(params);
 
       res.status(200).json({ data: findAllApplicationData, message: 'findAll' });
     } catch (error) {

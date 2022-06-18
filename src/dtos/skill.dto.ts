@@ -6,7 +6,4 @@ export class CreateSkillDto {
 
   @IsString()
   description: string;
-
-  @IsString()
-  icon: string;
 }

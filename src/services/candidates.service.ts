@@ -2,11 +2,13 @@ import { CreateCandidateDto } from '@dtos/candidates.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { Candidate } from '@interfaces/candidates.interface';
 import candidateModel from '@models/candidate.model';
+import userModel from '@models/user.model';
 import { isEmpty } from '@utils/util';
 import UserService from './users.service';
 
 class CandidateService {
   public candidate = candidateModel;
+  public user = userModel;
   public userService = new UserService();
 
   public async findAllCandidate(): Promise<Candidate[]> {
@@ -47,7 +49,18 @@ class CandidateService {
   public async updateCandidate(candidateId: string, candidateData: CreateCandidateDto): Promise<Candidate> {
     if (isEmpty(candidateData)) throw new HttpException(400, "You're not candidateData");
 
-    const updateCandidateById = await this.candidate.findByIdAndUpdate(candidateId, { ...candidateData }, { new: true, upsert: true });
+    const { userId, user, ...rest } = candidateData;
+    if (user) {
+      const newuser = await this.user.findByIdAndUpdate(userId, { ...user });
+      console.log('user', newuser);
+    }
+    const updateCandidateById = await this.candidate.findByIdAndUpdate(
+      candidateId,
+      {
+        ...rest,
+      },
+      { new: true, upsert: true },
+    );
     if (!updateCandidateById) throw new HttpException(409, "You're not candidate");
     return updateCandidateById;
   }

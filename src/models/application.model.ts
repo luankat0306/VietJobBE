@@ -11,7 +11,8 @@ const applicationSchema: Schema = new Schema({
     ref: 'Post',
   },
   status: {
-    type: String,
+    type: Number,
+    default: 0,
   },
   createAt: {
     type: Date,

@@ -3,14 +3,14 @@ import { CreateEmployerDto } from '@dtos/employer.dto';
 import { Employer } from '@interfaces/employer.interface';
 import EmployerService from '@services/employer.service';
 
-class EmployerController {
+class EmployersController {
   public employerService = new EmployerService();
 
-  public getEmployer = async (req: Request, res: Response, next: NextFunction) => {
+  public getEmployers = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const findAllEmployerData: Employer[] = await this.employerService.findAllEmployer();
+      const findAllEmployersData: Employer[] = await this.employerService.findAllEmployer();
 
-      res.status(200).json({ data: findAllEmployerData, message: 'findAll' });
+      res.status(200).json({ data: findAllEmployersData, message: 'findAll' });
     } catch (error) {
       next(error);
     }
@@ -20,6 +20,17 @@ class EmployerController {
     try {
       const employerId: string = req.params.id;
       const findOneEmployerData: Employer = await this.employerService.findEmployerById(employerId);
+
+      res.status(200).json({ data: findOneEmployerData, message: 'findOne' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getEmployerByUserId = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId: string = req.params.id;
+      const findOneEmployerData: Employer = await this.employerService.findEmployerByUserId(userId);
 
       res.status(200).json({ data: findOneEmployerData, message: 'findOne' });
     } catch (error) {
@@ -62,4 +73,4 @@ class EmployerController {
   };
 }
 
-export default EmployerController;
+export default EmployersController;

@@ -8,7 +8,9 @@ class CertificateController {
 
   public getCertificate = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const findAllCertificateData: Certificate[] = await this.certificateService.findAllCertificate();
+      const params = req.query;
+
+      const findAllCertificateData: Certificate[] = await this.certificateService.findAllCertificate(params);
 
       res.status(200).json({ data: findAllCertificateData, message: 'findAll' });
     } catch (error) {

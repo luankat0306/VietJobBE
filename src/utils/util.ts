@@ -17,3 +17,7 @@ export const isEmpty = (value: string | number | object): boolean => {
     return false;
   }
 };
+export const removeEmpty = (obj: object): object => {
+  Object.keys(obj).forEach(key => (obj[key] === '' || obj[key] === undefined) && delete obj[key]);
+  return obj;
+};

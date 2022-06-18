@@ -1,8 +1,10 @@
 import { Types } from 'mongoose';
 
-export interface SkillCandidate {
+export interface Experience {
   _id: Types.ObjectId;
   candidate: Types.ObjectId;
-  skill: Types.ObjectId;
+  title: string;
+  dateStart: string;
+  dateEnd: string;
   description: string;
 }

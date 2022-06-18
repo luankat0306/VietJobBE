@@ -6,7 +6,7 @@ const certificateSchema: Schema = new Schema({
     type: Schema.Types.ObjectId,
     ref: 'Candidate',
   },
-  name: {
+  title: {
     type: String,
   },
   image: {

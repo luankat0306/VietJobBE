@@ -27,6 +27,9 @@ const candidateSchema = new Schema<Candidate>({
   careerGoals: {
     type: String,
   },
+  wage: {
+    type: String,
+  },
   // skill: {
   //   type: String,
   // },

@@ -2,7 +2,7 @@ import { CreatePostDto } from '@dtos/post.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { Post } from '@interfaces/post.interface';
 import postModel from '@models/post.model';
-import { isEmpty } from '@utils/util';
+import { isEmpty, removeEmpty } from '@utils/util';
 import UserService from './users.service';
 
 class PostService {
@@ -16,17 +16,27 @@ class PostService {
   }: {
     page?: number;
     limit?: number;
-    [key: string]: string | number;
-  }): Promise<{ data: Post[]; page: number; totalPage: number }> {
+    [key: string]: any;
+  }): Promise<{ data: { data: Post[]; page: number; totalPage: number }; message: string }> {
     limit = +limit;
     page = +page;
+
     const post: Post[] = await this.post
-      .find(query)
+      .find(
+        removeEmpty({
+          title: { $regex: query.title ?? '', $options: 'i' },
+          // provinces: { $regex: query.province ?? '', $options: 'i' },
+          // careers: { $regex: query.career ?? '', $options: 'i' },
+          provinces: query.province,
+          careers: query.career,
+        }),
+      )
       .sort({
         createAt: 1,
       })
       .skip(limit * page - limit)
       .limit(limit)
+      .lean()
       .populate({
         path: 'employer',
         populate: {
@@ -34,7 +44,23 @@ class PostService {
         },
       })
       .exec();
-    return { data: post, page, totalPage: await this.post.count() };
+    return {
+      data: {
+        data: post,
+        page,
+        totalPage: await this.post
+          .find(
+            removeEmpty({
+              title: { $regex: query.title ?? '', $options: 'i' },
+              provinces: query.province ?? undefined,
+              careers: query.career ?? undefined,
+            }),
+          )
+          .lean()
+          .count(),
+      },
+      message: 'findAll',
+    };
   }
 
   public async findPostById(postId: string): Promise<Post> {

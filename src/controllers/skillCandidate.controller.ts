@@ -8,7 +8,9 @@ class SkillCandidateController {
 
   public getSkillCandidate = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const findAllSkillCandidateData: SkillCandidate[] = await this.skillCandidateService.findAllSkillCandidate();
+      const params = req.query;
+
+      const findAllSkillCandidateData: SkillCandidate[] = await this.skillCandidateService.findAllSkillCandidate(params);
 
       res.status(200).json({ data: findAllSkillCandidateData, message: 'findAll' });
     } catch (error) {
