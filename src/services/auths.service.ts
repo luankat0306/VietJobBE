@@ -32,11 +32,11 @@ class AuthService {
     });
 
     if (createUserData?.role === 0) {
-      this.candidate.create({ user: createUserData._id });
+      await this.candidate.create({ user: createUserData._id });
     }
 
     if (createUserData?.role === 1) {
-      this.employer.create({ user: createUserData._id });
+      await this.employer.create({ user: createUserData._id });
     }
 
     return createUserData;
