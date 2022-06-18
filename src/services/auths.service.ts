@@ -7,15 +7,19 @@ import { DataStoredInToken, TokenData } from '@interfaces/auth.interface';
 import { User } from '@interfaces/users.interface';
 import userModel from '@models/user.model';
 import { isEmpty } from '@utils/util';
+import candidateModel from '@models/candidate.model';
+import employerModel from '@models/employer.model';
 
 class AuthService {
   public users = userModel;
+  public candidate = candidateModel;
+  public employer = employerModel;
 
   public async signup(userData: CreateUserDto): Promise<User> {
     if (isEmpty(userData)) throw new HttpException(400, "You're not userData");
 
     const findUser: User = await this.users.findOne({ email: userData.email });
-    if (findUser) throw new HttpException(409, `You're email ${userData.email} already exists`);
+    if (findUser) throw new HttpException(409, `Email ${userData.email} đã tồn tại`);
 
     const hashedPassword = await hash(userData.password, 10);
     const createUserData: User = await (
@@ -26,6 +30,14 @@ class AuthService {
         return ret;
       },
     });
+
+    if (createUserData?.role === 0) {
+      this.candidate.create({ user: createUserData._id });
+    }
+
+    if (createUserData?.role === 1) {
+      this.employer.create({ user: createUserData._id });
+    }
 
     return createUserData;
   }
