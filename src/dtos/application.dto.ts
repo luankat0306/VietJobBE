@@ -6,3 +6,8 @@ export class CreateApplicationDto {
   @IsString()
   postId: string;
 }
+
+export class UpdateStatusApplicationDto {
+  @IsNumber()
+  status: number;
+}

@@ -29,10 +29,11 @@ class PostService {
           // careers: { $regex: query.career ?? '', $options: 'i' },
           provinces: query.province,
           careers: query.career,
+          ...query,
         }),
       )
       .sort({
-        createAt: 1,
+        createAt: -1,
       })
       .skip(limit * page - limit)
       .limit(limit)
@@ -54,6 +55,7 @@ class PostService {
               title: { $regex: query.title ?? '', $options: 'i' },
               provinces: query.province ?? undefined,
               careers: query.career ?? undefined,
+              ...query,
             }),
           )
           .lean()

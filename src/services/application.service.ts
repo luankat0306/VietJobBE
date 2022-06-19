@@ -1,4 +1,4 @@
-import { CreateApplicationDto } from '@dtos/application.dto';
+import { CreateApplicationDto, UpdateStatusApplicationDto } from '@dtos/application.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { Application } from '@interfaces/application.interface';
 import applicationModel from '@models/application.model';
@@ -31,6 +31,39 @@ class ApplicationService {
             path: 'user',
           },
         },
+      })
+      .populate({
+        path: 'candidate',
+        populate: {
+          path: 'user',
+        },
+      })
+      .exec();
+    return {
+      data: application,
+      page,
+      totalPage: await this.application.find(query).lean().count(),
+    };
+  }
+
+  public async findAllApplicationByPostId({
+    limit = 10,
+    page = 1,
+    ...query
+  }: {
+    page?: number;
+    limit?: number;
+    [key: string]: any;
+  }): Promise<{ data: Application[]; page: number; totalPage: number }> {
+    const application: Application[] = await this.application
+      .find(query)
+      .skip(limit * page - limit)
+      .limit(limit)
+      .populate({
+        path: 'candidate',
+        populate: {
+          path: 'user province',
+        },
       });
     return {
       data: application,
@@ -61,7 +94,7 @@ class ApplicationService {
     return createApplication;
   }
 
-  public async updateApplication(applicationId: string, applicationData: CreateApplicationDto): Promise<Application> {
+  public async updateApplication(applicationId: string, applicationData: UpdateStatusApplicationDto): Promise<Application> {
     if (isEmpty(applicationData)) throw new HttpException(400, "You're not applicationData");
 
     const updateApplicationById = await this.application.findByIdAndUpdate(applicationId, { ...applicationData });

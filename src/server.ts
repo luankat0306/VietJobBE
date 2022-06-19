@@ -14,6 +14,7 @@ import ExperienceRoute from '@routes/experience.route';
 import CertificateRoute from '@routes/certificate.route';
 import SkillRoute from '@routes/skill.route';
 import SkillCandidateRoute from '@routes/skillCandidate.route';
+import AdminRoute from '@routes/admin.route';
 
 validateEnv();
 
@@ -32,6 +33,7 @@ const app = new App([
   new ExperienceRoute(),
   new SkillRoute(),
   new SkillCandidateRoute(),
+  new AdminRoute(),
 ]);
 
 app.listen();

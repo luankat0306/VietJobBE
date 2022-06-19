@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from 'express';
-import { CreateApplicationDto } from '@dtos/application.dto';
+import { CreateApplicationDto, UpdateStatusApplicationDto } from '@dtos/application.dto';
 import { Application } from '@interfaces/application.interface';
 import ApplicationService from '@services/application.service';
 
@@ -9,7 +9,18 @@ class ApplicationController {
   public getApplication = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const params = req.query;
-      const findAllApplicationData: Application[] = await this.applicationService.findAllApplication(params);
+      const findAllApplicationData: any = await this.applicationService.findAllApplication(params);
+
+      res.status(200).json({ data: findAllApplicationData, message: 'findAll' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
+  public getAllApplicationByPostId = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const params = req.query;
+      const findAllApplicationData: any = await this.applicationService.findAllApplicationByPostId(params);
 
       res.status(200).json({ data: findAllApplicationData, message: 'findAll' });
     } catch (error) {
@@ -42,7 +53,7 @@ class ApplicationController {
   public updateApplication = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const applicationId: string = req.params.id;
-      const applicationData: CreateApplicationDto = req.body;
+      const applicationData: UpdateStatusApplicationDto = req.body;
       const updateApplicationData: Application = await this.applicationService.updateApplication(applicationId, applicationData);
 
       res.status(200).json({ data: updateApplicationData, message: 'updated' });
