@@ -42,7 +42,9 @@ class EmployerService {
 
     const findUser = await this.userService.findUserById(employerData.userId);
     if (!findUser) throw new HttpException(409, "You're not user");
-    const createEmployer = await this.employer.create({ ...employerData });
+
+    const { userId, ...data } = employerData;
+    const createEmployer = await this.employer.create({ ...data, user: userId });
     return createEmployer;
   }
 
@@ -58,6 +60,7 @@ class EmployerService {
       employerId,
       {
         ...rest,
+        user: userId,
       },
       { new: true, upsert: true },
     );

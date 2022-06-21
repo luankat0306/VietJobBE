@@ -17,7 +17,7 @@ class EmployersRoute implements Routes {
     this.router.get(`${this.path}`, this.employersController.getEmployers);
     this.router.get(`${this.path}/:id`, this.employersController.getEmployerById);
     this.router.get(`${this.path}/user/:id`, this.employersController.getEmployerByUserId);
-    this.router.post(`${this.path}`, validationMiddleware(CreateEmployerDto, 'body'), this.employersController.createEmployer);
+    this.router.post(`${this.path}`, validationMiddleware(CreateEmployerDto, 'body', true), this.employersController.createEmployer);
     this.router.put(`${this.path}/:id`, validationMiddleware(CreateEmployerDto, 'body', true), this.employersController.updateEmployer);
     this.router.delete(`${this.path}/:id`, this.employersController.deleteEmployer);
   }

@@ -32,6 +32,9 @@ const userSchema = new Schema<User>({
     type: Number,
     default: 0,
   },
+  cover: {
+    type: String,
+  },
 });
 
 const userModel = model<User>('User', userSchema);
