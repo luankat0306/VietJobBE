@@ -15,6 +15,7 @@ class CareerRoute implements Routes {
 
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.careersController.getCareer);
+    this.router.get(`${this.path}/countJob`, this.careersController.getCountJob);
     this.router.get(`${this.path}/:id`, this.careersController.getCareerById);
     this.router.post(`${this.path}`, validationMiddleware(CreateCareerDto, 'body'), this.careersController.createCareer);
     this.router.put(`${this.path}/:id`, validationMiddleware(CreateCareerDto, 'body', true), this.careersController.updateCareer);

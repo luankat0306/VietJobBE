@@ -1,12 +1,14 @@
 import { CreatePostDto } from '@dtos/post.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { Post } from '@interfaces/post.interface';
+import applicationModel from '@models/application.model';
 import postModel from '@models/post.model';
 import { isEmpty, removeEmpty } from '@utils/util';
 import UserService from './users.service';
 
 class PostService {
   public post = postModel;
+  public application = applicationModel;
   public userService = new UserService();
 
   public async findAllPost({
@@ -104,6 +106,10 @@ class PostService {
 
   public async deletePost(postId: string): Promise<Post> {
     const deletePostById: Post = await this.post.findByIdAndDelete(postId);
+    const application = this.application.findOne({
+      post: postId,
+    });
+    if (application) throw new HttpException(409, 'Bài đăng đã có ứng viên nên không thể xoá');
     if (!deletePostById) throw new HttpException(409, "You're not post");
 
     return deletePostById;

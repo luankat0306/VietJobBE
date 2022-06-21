@@ -16,6 +16,16 @@ class CareerController {
     }
   };
 
+  public getCountJob = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const findAllCareerData: any = await this.careerService.countJob();
+
+      res.status(200).json({ data: findAllCareerData, message: 'findAll' });
+    } catch (error) {
+      next(error);
+    }
+  };
+
   public getCareerById = async (req: Request, res: Response, next: NextFunction) => {
     try {
       const careerId: string = req.params.id;

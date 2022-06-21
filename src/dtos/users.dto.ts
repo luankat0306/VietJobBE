@@ -25,6 +25,9 @@ export class CreateUserDto {
 
   @IsNumber()
   public role: number;
+
+  @IsString()
+  public cover: string;
 }
 
 export class UpdateUserDto {

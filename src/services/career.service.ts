@@ -2,16 +2,36 @@ import { CreateCareerDto } from '@dtos/career.dto';
 import { HttpException } from '@exceptions/HttpException';
 import { Career } from '@interfaces/career.interface';
 import careerModel from '@models/career.model';
+import postModel from '@models/post.model';
 import { isEmpty } from '@utils/util';
 import UserService from './users.service';
 
 class CareerService {
   public career = careerModel;
+  public post = postModel;
   public userService = new UserService();
 
   public async findAllCareer(): Promise<Career[]> {
     const career: Career[] = await this.career.find();
     return career;
+  }
+
+  public async countJob(): Promise<any> {
+    const career = await this.career.find();
+    const newData = await Promise.all(
+      career.map(async item => {
+        const countPosts = await this.post
+          .find({
+            careers: item.name,
+          })
+          .count();
+        return {
+          name: item.name,
+          count: countPosts,
+        };
+      }),
+    );
+    return newData;
   }
 
   public async findCareerById(careerId: string): Promise<Career> {

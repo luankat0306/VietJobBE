@@ -2,11 +2,13 @@ import { CreateApplicationDto, UpdateStatusApplicationDto } from '@dtos/applicat
 import { HttpException } from '@exceptions/HttpException';
 import { Application } from '@interfaces/application.interface';
 import applicationModel from '@models/application.model';
+import postModel from '@models/post.model';
 import { isEmpty } from '@utils/util';
 import UserService from './users.service';
 
 class ApplicationService {
   public application = applicationModel;
+  public post = postModel;
   public userService = new UserService();
 
   public async findAllApplication({
@@ -90,6 +92,8 @@ class ApplicationService {
       post: postId,
     });
     if (application) throw new HttpException(409, 'Bạn đã ứng tuyển với công việc này rồi');
+    const post = await this.post.findById(postId);
+    if (new Date(post?.deadline).getTime() < new Date().getTime()) throw new HttpException(409, 'Đã hết hạn nộp hồ sơ');
     const createApplication = await this.application.create({ candidate: candidateId, post: postId });
     return createApplication;
   }
