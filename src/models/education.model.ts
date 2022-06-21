@@ -9,6 +9,10 @@ const educationSchema = new Schema<Education>({
   title: {
     type: String,
   },
+  isCurrent: {
+    type: Boolean,
+    default: false,
+  },
   dateStart: {
     type: Date,
   },

@@ -16,7 +16,7 @@ class EducationRoute implements Routes {
   private initializeRoutes() {
     this.router.get(`${this.path}`, this.educationsController.getEducation);
     this.router.get(`${this.path}/:id`, this.educationsController.getEducationById);
-    this.router.post(`${this.path}`, validationMiddleware(CreateEducationDto, 'body'), this.educationsController.createEducation);
+    this.router.post(`${this.path}`, validationMiddleware(CreateEducationDto, 'body', true), this.educationsController.createEducation);
     this.router.put(`${this.path}/:id`, validationMiddleware(CreateEducationDto, 'body', true), this.educationsController.updateEducation);
     this.router.delete(`${this.path}/:id`, this.educationsController.deleteEducation);
   }

@@ -12,14 +12,14 @@ class EmployerService {
   public userService = new UserService();
 
   public async findAllEmployer(): Promise<Employer[]> {
-    const employer: Employer[] = await this.employer.find();
+    const employer: Employer[] = await this.employer.find().populate('user');
     return employer;
   }
 
   public async findEmployerById(employerId: string): Promise<Employer> {
     if (isEmpty(employerId)) throw new HttpException(400, "You're not employerId");
 
-    const findEmployer: Employer = await this.employer.findOne({ _id: employerId });
+    const findEmployer: Employer = await this.employer.findOne({ _id: employerId }).populate('user');
     if (!findEmployer) throw new HttpException(409, "You're not employer");
 
     return findEmployer;
