@@ -2,6 +2,9 @@
   "name": "servers",
   "version": "0.0.0",
   "description": "TypeScript + Mongoose + MongoDB + Express API Server",
+  "engines": {
+    "node": "16.x"
+  },
   "author": "",
   "license": "ISC",
   "scripts": {

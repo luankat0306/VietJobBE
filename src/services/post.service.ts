@@ -12,6 +12,8 @@ class PostService {
   public async findAllPost({
     limit = 10,
     page = 1,
+    province,
+    career,
     ...query
   }: {
     page?: number;
@@ -24,12 +26,12 @@ class PostService {
     const post: Post[] = await this.post
       .find(
         removeEmpty({
+          ...query,
           title: { $regex: query.title ?? '', $options: 'i' },
           // provinces: { $regex: query.province ?? '', $options: 'i' },
           // careers: { $regex: query.career ?? '', $options: 'i' },
-          provinces: query.province,
-          careers: query.career,
-          ...query,
+          provinces: province,
+          careers: career,
         }),
       )
       .sort({
@@ -53,8 +55,8 @@ class PostService {
           .find(
             removeEmpty({
               title: { $regex: query.title ?? '', $options: 'i' },
-              provinces: query.province ?? undefined,
-              careers: query.career ?? undefined,
+              provinces: province ?? undefined,
+              careers: career ?? undefined,
               ...query,
             }),
           )
