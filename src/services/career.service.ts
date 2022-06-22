@@ -31,7 +31,7 @@ class CareerService {
         };
       }),
     );
-    return newData;
+    return newData?.filter(item => item?.name !== 'Tất cả ngành nghề' || item?.count !== 0).sort((a, b) => b.count - a.count);
   }
 
   public async findCareerById(careerId: string): Promise<Career> {
